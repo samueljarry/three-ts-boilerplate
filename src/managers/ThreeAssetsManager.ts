@@ -78,7 +78,7 @@ export class ThreeAssetsManager {
 
   public static async Load(): Promise<void> {
     for(const [_, resource] of ThreeAssetsManager._LoadingQueue) {
-      // Load textures
+      // Load models
       if(resource.isModel) {
         const type = resource.type as keyof typeof ModelsExtensionsId;
         const model = await ModelsLoadersProxy.Load(ModelsExtensionsId[type], resource.path);
