@@ -1,20 +1,20 @@
 import { EventsId } from "@constants/EventsId";
 
-type EventFunction = (event?: Event) => void
-type EventsSet = Set<EventFunction>
+type EventCallback = (event: Event) => void
+type EventsSet = Set<EventCallback>
 
 export class EventsManager {
   private static _EventsMap = new Map<EventsId, EventsSet>();
-  private static _EventsActionsMap = new Map<EventsId, any>();
+  private static _EventsCallbacksMap = new Map<EventsId, EventCallback>();
   
   public static Init() {
-    EventsManager._EventsMap.set(EventsId.RESIZE, new Set<EventFunction>());
+    EventsManager._EventsMap.set(EventsId.RESIZE, new Set<EventCallback>());
     EventsManager._SetListeners();
   }
 
   private static _SetListeners() {
     for(const [key, actions] of EventsManager._EventsMap) {
-      if(!EventsManager._EventsActionsMap.get(key)) {
+      if(!EventsManager._EventsCallbacksMap.get(key)) {
         const func = (event: Event) => {
           for(const action of actions) {
             action(event)
@@ -22,43 +22,43 @@ export class EventsManager {
         };
   
         window.addEventListener(key, func);
-        EventsManager._EventsActionsMap.set(key, func);
+        EventsManager._EventsCallbacksMap.set(key, func);
       }
     }
   }
 
-  public static AddEventMethod(eventId: EventsId, method: EventFunction) {
+  public static AddEventCallback(eventId: EventsId, callback: EventCallback) {
     const event = EventsManager._EventsMap.get(eventId);
     
     if(!event) {
       EventsManager.AddEventListener(eventId);
       const event = EventsManager._EventsMap.get(eventId) as EventsSet;
-      event.add(method);
+      event.add(callback);
 
       return;
     }
 
-    event.add(method);
+    event.add(callback);
   }
 
-  public static RemoveEventMethod(eventId: EventsId, method: EventFunction) {
+  public static RemoveEventCallback(eventId: EventsId, callback: EventCallback) {
     const event = EventsManager._EventsMap.get(eventId);
     if(!event) {
       throw new Error(`Couldn't find method to remove in EventsManager.ts`);
     }
 
-    event.delete(method);
+    event.delete(callback);
   }
 
   public static RemoveEventListener(listenerId: EventsId) {
-    const actions = EventsManager._EventsActionsMap.get(listenerId);
+    const actions = EventsManager._EventsCallbacksMap.get(listenerId);
     
     if(!actions) {
       throw new Error(`Couldn't find listener for ${listenerId} events to remove in EventManager.ts`);
     }
 
     window.removeEventListener(listenerId, actions);
-    EventsManager._EventsActionsMap.delete(listenerId);
+    EventsManager._EventsCallbacksMap.delete(listenerId);
     EventsManager._EventsMap.delete(listenerId);
   }
 
@@ -67,7 +67,7 @@ export class EventsManager {
       throw new Error(`${listenerId} listener already exists`);
     };
 
-    EventsManager._EventsMap.set(listenerId, new Set<EventFunction>());
+    EventsManager._EventsMap.set(listenerId, new Set<EventCallback>());
     EventsManager._SetListeners();
   }
 }

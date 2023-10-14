@@ -9,6 +9,7 @@ export default defineConfig({
       '@views': path.resolve(__dirname, './src/views/'),
       '@constants': path.resolve(__dirname, './src/constants/'),
       '@managers': path.resolve(__dirname, './src/managers/'),
+      '@styles': path.resolve(__dirname, './src/styles/'),
     }
   }
 })

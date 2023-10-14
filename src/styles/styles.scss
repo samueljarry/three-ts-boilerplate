@@ -1,0 +1,16 @@
+*, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 100%;
+  min-height: 100vh;
+}
+
+.webgl {
+  width: 100% !important;
+  height: 100% !important;
+
+}
