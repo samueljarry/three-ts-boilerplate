@@ -1,5 +1,4 @@
-import { LoadersManager } from "../managers/LoadersManager";
-import { ModelLoaderProxy } from "../proxies/ModelLoaderProxy";
+import { ThreeAssetsManager } from "@managers/ThreeAssetsManager";
 
 export class InitCommand {
   public static async Init() {
@@ -7,16 +6,15 @@ export class InitCommand {
   }
 
   public static async InitProxies() {
-    ModelLoaderProxy.Init();
     InitCommand.InitManagers();
   }
 
   public static async InitManagers() {
-    LoadersManager.Init();
+    ThreeAssetsManager.Init();
     InitCommand.LoadAssets();
   }
 
   public static LoadAssets() {
-    LoadersManager.Load();
+    ThreeAssetsManager.Load();
   }
 }

@@ -1,3 +1,4 @@
 export enum PathId {
-  MODELS = "/public/models/"
+  MODELS = "/models/",
+  TEXTURES = "/textures/"
 }
