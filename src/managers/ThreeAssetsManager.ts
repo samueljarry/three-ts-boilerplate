@@ -17,8 +17,8 @@ type LoadingQueueDatas = {
 
 export class ThreeAssetsManager {
   private static _LoadingQueue = new Map<string, LoadingQueueDatas>();
-  private static _ModelsMap = new Map<string, Model>();
-  private static _TexturesMap = new Map<string, THREE.Texture>();
+  private static _ModelsMap = new Map<ModelsId, Model>();
+  private static _TexturesMap = new Map<TexturesId, THREE.Texture>();
   
   public static Init() {
     ModelsLoadersProxy.Init();
@@ -43,6 +43,14 @@ export class ThreeAssetsManager {
     }
   }
 
+  public static GetTexture(textureId: TexturesId): THREE.Texture {
+    return ThreeAssetsManager._TexturesMap.get(textureId) as THREE.Texture;
+  }
+
+  public static GetAllTextures(): Map<TexturesId, THREE.Texture> {
+    return ThreeAssetsManager._TexturesMap;
+  }
+
   public static AddModelsToQueue() {
     for(const k in ModelsId ) {
       const key = k as keyof typeof ModelsId;
@@ -60,19 +68,27 @@ export class ThreeAssetsManager {
     }
   }
 
+  public static GetModel(modelId: ModelsId): Model {
+    return ThreeAssetsManager._ModelsMap.get(modelId) as Model;
+  }
+
+  public static GetAllModels(): Map<ModelsId, Model> {
+    return ThreeAssetsManager._ModelsMap;
+  }
+
   public static async Load(): Promise<void> {
     for(const [_, resource] of ThreeAssetsManager._LoadingQueue) {
-      // Load textures
+      // Load models
       if(resource.isModel) {
         const type = resource.type as keyof typeof ModelsExtensionsId;
         const model = await ModelsLoadersProxy.Load(ModelsExtensionsId[type], resource.path);
-        ThreeAssetsManager._ModelsMap.set(resource.name, model);
+        ThreeAssetsManager._ModelsMap.set(resource.name as ModelsId, model);
       }
 
       // Load textures
       else {
         const texture = await TexturesLoaderProxy.Load(resource.path);
-        ThreeAssetsManager._TexturesMap.set(resource.name, texture);
+        ThreeAssetsManager._TexturesMap.set(resource.name as TexturesId, texture);
       }
       
     }
