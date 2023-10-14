@@ -13,11 +13,19 @@
     "isolatedModules": true,
     "noEmit": true,
 
+    "paths": {
+      "@proxies/*": ["src/proxies/*"],      
+      "@commands/*": ["src/commands/*"],
+      "@views/*": ["src/views/*"],
+      "@constants/*": ["src/constants/*"],
+      "@managers/*": ["src/managers/*"],      
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.js"]
 }
