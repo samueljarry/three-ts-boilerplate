@@ -2,7 +2,7 @@ import { ModelsId } from "@constants/ModelsId";
 import { Objects3DId } from "@constants/Objects3DId";
 import { EventsManager } from "@managers/EventsManager";
 import { ThreeSceneManager } from "@managers/ThreeSceneManager";
-import { OnRenderParams, RendererProxy } from "@proxies/RendererProxy";
+import { OnRenderParams } from "@proxies/RendererProxy";
 import { CustomEventsId } from '@constants/CustomEventsId';
 import { EventListenersId } from '@constants/EventListenersId';
 
@@ -27,7 +27,7 @@ export class Object3DBase {
 
     this._instanceId = objectId;
     ThreeSceneManager.AddObject(objectId, this._instance)
-
+    
     this._isInstanced = true;
     this._onInstancedStateChange();
   }
@@ -43,12 +43,7 @@ export class Object3DBase {
     this._onInstancedStateChange();
   }
 
-  private _initEventsBasedCallbacks() {
-    // Resize events
-    // if(this._onResize !== Object3DBase.prototype._onResize) {
-    //   EventsManager.AddEventListenerCallback(EventListenersId.RESIZE, this._onResize.bind(this))
-    // }
-
+  private _initEventsBasedCallbacks(): void {
     for( const [eventId, callback] of this._eventListenersMap ) {
       EventsManager.AddEventListenerCallback(eventId, callback)
     }
@@ -58,7 +53,7 @@ export class Object3DBase {
     }
   }
 
-  private _removeEventsBasedCallbacks() {
+  private _removeEventsBasedCallbacks(): void {
     for( const [eventId, callback] of this._eventListenersMap ) {
       EventsManager.RemoveEventListenerCallback(eventId, callback)
     }
@@ -68,7 +63,7 @@ export class Object3DBase {
     }
   }
 
-  private _onInstancedStateChange() {
+  private _onInstancedStateChange(): void {
     if(this._isInstanced) {
       this._initEventsBasedCallbacks();
     } else {

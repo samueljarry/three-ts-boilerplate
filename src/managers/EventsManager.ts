@@ -106,6 +106,9 @@ export class EventsManager {
 
   public static DispatchCustomEvent<T>(customEventId: CustomEventsId, params: T): void {
     const actions = EventsManager._CustomEventsMap.get(customEventId);
+    if(!actions) {
+      throw new Error(`Couldn't find event: ${customEventId}`)
+    }
     for( const action of actions) {
       action(params);
     }
