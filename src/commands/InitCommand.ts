@@ -1,6 +1,7 @@
 import { EventsManager } from "@managers/EventsManager";
 import { ThreeAssetsManager } from "@managers/ThreeAssetsManager";
 import { ThreeSceneManager } from "@managers/ThreeSceneManager";
+import { Object3DBase } from "@views/three/bases/Object3DBase";
 
 export class InitCommand {
   public static async Init() {
@@ -14,6 +15,7 @@ export class InitCommand {
   public static async InitManagers() {
     ThreeAssetsManager.Init();
     EventsManager.Init();
+    new Object3DBase();
   
     InitCommand.LoadAssets();
   }

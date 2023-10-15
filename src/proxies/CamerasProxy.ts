@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { ThreeSceneManager } from "@managers/ThreeSceneManager"
 import { EventsManager } from '@managers/EventsManager';
-import { EventsId } from '@constants/EventsId';
+import { EventListenersId } from '@constants/EventListenersId';
 
 export class CamerasProxy {
   private static readonly _FOV = 45;
@@ -24,7 +24,7 @@ export class CamerasProxy {
     }
 
     ThreeSceneManager.AddObject('Camera', CamerasProxy.Camera);
-    EventsManager.AddEventCallback(EventsId.RESIZE, CamerasProxy._OnResize);
+    EventsManager.AddEventListenerCallback(EventListenersId.RESIZE, CamerasProxy._OnResize);
 
     return CamerasProxy.Camera;
   }

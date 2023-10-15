@@ -2,13 +2,21 @@ import { ThreeSceneManager } from '@managers/ThreeSceneManager';
 import * as THREE from 'three';
 import { CamerasProxy } from './CamerasProxy';
 import { EventsManager } from '@managers/EventsManager';
-import { EventsId } from '@constants/EventsId';
+import { EventListenersId } from '@constants/EventListenersId';
+import { CustomEventsId } from '@constants/CustomEventsId';
 
-type OnRenderCallback = () => void;
+export type OnRenderParams = {
+  delta: number;
+  elapsed: number;
+}
+
+export type OnRenderCallback = (params: OnRenderParams) => void
 
 export class RendererProxy {
   private static _Renderer: THREE.WebGLRenderer;
-  private static _OnRenderCallbacks = new Set<OnRenderCallback>;
+  private static _Clock = new THREE.Clock();
+  private static _Delta = 0;
+  private static _Elapsed = 0;
 
   public static Init(): void {
     RendererProxy._Renderer = new THREE.WebGLRenderer({
@@ -22,7 +30,8 @@ export class RendererProxy {
     RendererProxy._Renderer.setPixelRatio(window.devicePixelRatio);
     RendererProxy._Renderer.setSize(window.innerWidth, window.innerHeight);
 
-    EventsManager.AddEventCallback(EventsId.RESIZE, RendererProxy._OnResize);
+    EventsManager.AddEventListenerCallback(EventListenersId.RESIZE, RendererProxy._OnResize);
+    EventsManager.AddCustomEvent(CustomEventsId.RENDER);
     RendererProxy._Render();
   }
 
@@ -31,21 +40,17 @@ export class RendererProxy {
     RendererProxy._Renderer.setPixelRatio(window.devicePixelRatio);
   }
 
-  public static AddOnRenderCallback(callback: OnRenderCallback): void {
-    RendererProxy._OnRenderCallbacks.add(callback)
-  }
-
-  public static RemoveOnRenderCallback(callback: OnRenderCallback): void {
-    RendererProxy._OnRenderCallbacks.delete(callback)
-  }
-
   private static _Render(): void {
-    RendererProxy._Renderer.render(ThreeSceneManager.Scene, CamerasProxy.Camera)
+    const previousTime = RendererProxy._Elapsed;
+    RendererProxy._Elapsed = RendererProxy._Clock.getElapsedTime();
+    RendererProxy._Delta = RendererProxy._Elapsed - previousTime;
 
-    for(const callback of RendererProxy._OnRenderCallbacks ) {
-      callback()
-    }
-    
+    EventsManager.DispatchCustomEvent<OnRenderParams>(CustomEventsId.RENDER, {
+      delta: RendererProxy._Delta,
+      elapsed: RendererProxy._Elapsed,
+    });
+
+    RendererProxy._Renderer.render(ThreeSceneManager.Scene, CamerasProxy.Camera)
     window.requestAnimationFrame(RendererProxy._Render.bind(this))
   }
 }
