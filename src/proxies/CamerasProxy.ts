@@ -1,50 +1,78 @@
 import * as THREE from 'three';
 import { ThreeSceneManager } from "@managers/ThreeSceneManager"
+import { EventsManager } from '@managers/EventsManager';
+import { EventListenersId } from '@constants/EventListenersId';
 
 export class CamerasProxy {
   private static readonly _FOV = 45;
   private static readonly _NEAR = 1;
   private static readonly _FAR = 1000;
-  private static _Camera: THREE.OrthographicCamera | THREE.PerspectiveCamera;
+  public static Camera: THREE.OrthographicCamera | THREE.PerspectiveCamera;
 
-  public static Init(type: 'orthographic'): THREE.OrthographicCamera
-  public static Init(type: 'perspective'): THREE.PerspectiveCamera
-  public static Init(type: string) {
+  public static async Init(type: 'orthographic'): Promise<THREE.OrthographicCamera>;
+  public static async Init(type: 'perspective'): Promise<THREE.PerspectiveCamera>;
+  public static async Init(type: string) {
     switch(type) {
       case 'orthographic':
-        CamerasProxy._Camera = CamerasProxy._CreateOrthographicCamera();
+        CamerasProxy.Camera = CamerasProxy._CreateOrthographicCamera();
         break;
       case 'perspective':
-        CamerasProxy._Camera = CamerasProxy._CreatePerspectiveCamera();
+        CamerasProxy.Camera = CamerasProxy._CreatePerspectiveCamera();
         break;
       default:
         throw new Error(`Camera type ${type} is not supported by CameraProxy.ts`);
     }
 
-    return CamerasProxy._Camera;
+    ThreeSceneManager.AddObject('Camera', CamerasProxy.Camera);
+    EventsManager.AddEventListenerCallback(EventListenersId.RESIZE, CamerasProxy._OnResize);
+
+    return CamerasProxy.Camera;
   }
 
   private static _CreateOrthographicCamera(): THREE.OrthographicCamera {
-    const canvas = ThreeSceneManager.GetCanvas();
-
     return new THREE.OrthographicCamera(
-      canvas.offsetWidth / -2,
-      canvas.offsetWidth / 2,
-      canvas.offsetHeight / 2,
-      canvas.offsetHeight / -2,
+      -1,
+      1,
+      1,
+      -1,
       CamerasProxy._NEAR,
       CamerasProxy._FAR
-    )
+    );
   }
 
   private static _CreatePerspectiveCamera(): THREE.PerspectiveCamera {
-    const canvas = ThreeSceneManager.GetCanvas();
 
     return new THREE.PerspectiveCamera(
       CamerasProxy._FOV,
-      canvas.offsetWidth / canvas.offsetHeight,
+      window.innerWidth / window.innerHeight,
       CamerasProxy._NEAR,
       CamerasProxy._FAR
-    )
+    );
+  }
+
+  public static GetCamera(): THREE.PerspectiveCamera | THREE.OrthographicCamera {
+    if(CamerasProxy.Camera instanceof THREE.PerspectiveCamera) {
+      return CamerasProxy.Camera as THREE.PerspectiveCamera;
+    }
+    if(CamerasProxy.Camera instanceof THREE.OrthographicCamera) {
+      return CamerasProxy.Camera as THREE.OrthographicCamera;
+    }
+
+    throw new Error('Camera is either not supported or inexistant');
+  }
+
+  private static _OnResize(): void {
+    if(CamerasProxy.Camera instanceof THREE.PerspectiveCamera) {
+      CamerasProxy.Camera.aspect = window.innerWidth / window.innerHeight;
+    }
+    
+    else if(CamerasProxy.Camera instanceof THREE.OrthographicCamera) {
+      CamerasProxy.Camera.left = -1;
+      CamerasProxy.Camera.right = 1;
+      CamerasProxy.Camera.top = 1;
+      CamerasProxy.Camera.bottom = -1;
+    }
+
+    CamerasProxy.Camera.updateProjectionMatrix();
   }
 }

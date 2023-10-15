@@ -1,4 +1,4 @@
-export enum EventsId {
+export enum EventListenersId {
   // Mouse Events
   CLICK = 'click',
   DBLCLICK = 'dblclick',

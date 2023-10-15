@@ -1,32 +1,49 @@
 import { CamerasProxy } from '@proxies/CamerasProxy';
 import { RendererProxy } from '@proxies/RendererProxy';
 import * as THREE from 'three';
+import { Charmander } from '@views/three/Charmander';
+import { ModelsId } from '@constants/ModelsId';
+import { Objects3DId } from '@constants/Objects3DId';
 
 export class ThreeSceneManager {
-  private static _Canvas: HTMLCanvasElement; 
-  private static _Scene = new THREE.Scene();
-  private static _SceneObjectsMap = new Map<string, THREE.Object3D>();
+  public static Canvas: HTMLCanvasElement; 
+  public static Scene = new THREE.Scene();
+  private static _SceneObjectsMap = new Map<ModelsId | Objects3DId, THREE.Object3D>();
+  private static _isCreated: boolean = false;
 
-  public static Init(canvas: HTMLCanvasElement) {
-    ThreeSceneManager._Canvas = canvas;
+  public static async Init(canvas: HTMLCanvasElement) {
+    ThreeSceneManager.Canvas = canvas;
     CamerasProxy.Init('perspective');
     RendererProxy.Init();
-    
-    // const charmander = ThreeAssetsManager.GetModel(ModelsId.CHARMANDER);
-    // ThreeSceneManager.AddObject(ModelsId.CHARMANDER, charmander.scene)
+
+    new Charmander();
+    ThreeSceneManager.CreateScene();
   }
 
-  public static GetCanvas(): HTMLCanvasElement {
-    return ThreeSceneManager._Canvas;
-  }
-
-  public static AddObject(id: string, object: THREE.Object3D): void {
+  public static AddObject(id: ModelsId | Objects3DId, object: THREE.Object3D): void {
     ThreeSceneManager._SceneObjectsMap.set(id, object);
+
+    if(ThreeSceneManager._isCreated) {
+      ThreeSceneManager._UpdateScene(object, 'add');
+    }
+  }
+
+  public static RemoveObject(id: ModelsId | Objects3DId): void {
+    const object = ThreeSceneManager._SceneObjectsMap.get(id) as THREE.Object3D;
+    ThreeSceneManager._SceneObjectsMap.delete(id);
+
+    ThreeSceneManager._UpdateScene(object, 'remove');
   }
 
   public static CreateScene(): void {
     for(const [_, value] of ThreeSceneManager._SceneObjectsMap) {
-      ThreeSceneManager._Scene.add(value)
+      ThreeSceneManager.Scene.add(value)
     }
+
+    ThreeSceneManager._isCreated = true;
+  }
+
+  private static _UpdateScene(object: THREE.Object3D, addOrRemove: 'remove' | 'add') {
+    ThreeSceneManager.Scene[addOrRemove](object);
   }
 }

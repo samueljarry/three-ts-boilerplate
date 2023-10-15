@@ -14,11 +14,12 @@
     "noEmit": true,
 
     "paths": {
-      "@proxies/*": ["src/proxies/*"],      
-      "@commands/*": ["src/commands/*"],
-      "@views/*": ["src/views/*"],
-      "@constants/*": ["src/constants/*"],
-      "@managers/*": ["src/managers/*"],      
+      "@proxies/*": ["./src/proxies/*"],      
+      "@commands/*": ["./src/commands/*"],
+      "@views/*": ["./src/views/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@managers/*": ["./src/managers/*"],     
+      "@styles/*": ["./src/styles/*"],      
     },
 
     /* Linting */
