@@ -12,5 +12,13 @@ body {
 .webgl {
   width: 100% !important;
   height: 100% !important;
+}
 
+#test {
+  position:absolute;
+  left: 0;
+  top: 0;
+  background:red;
+  width: 100px;
+  aspect-ratio: 1;
 }

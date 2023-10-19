@@ -1,3 +1,4 @@
+import { MainThree } from "./MainThree";
 import { InitCommand } from "./commands/InitCommand";
 import '@styles/styles.scss';
 
@@ -8,7 +9,7 @@ export class Main {
   }
 
   public static Start() {
-    
+    MainThree.Init();
   }
 }
 

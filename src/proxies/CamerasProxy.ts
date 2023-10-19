@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { ThreeSceneManager } from "@managers/ThreeSceneManager"
+import { ThreeSceneProxy } from "@proxies/ThreeSceneProxy"
 import { EventsManager } from '@managers/EventsManager';
 import { EventListenersId } from '@constants/EventListenersId';
 
@@ -23,7 +23,7 @@ export class CamerasProxy {
         throw new Error(`Camera type ${type} is not supported by CameraProxy.ts`);
     }
 
-    ThreeSceneManager.AddObject('Camera', CamerasProxy.Camera);
+    ThreeSceneProxy.AddObject('Camera', CamerasProxy.Camera);
     EventsManager.AddEventListenerCallback(EventListenersId.RESIZE, CamerasProxy._OnResize);
 
     return CamerasProxy.Camera;

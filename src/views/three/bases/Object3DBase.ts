@@ -1,7 +1,7 @@
 import { ModelsId } from "@constants/ModelsId";
 import { Objects3DId } from "@constants/Objects3DId";
 import { EventsManager } from "@managers/EventsManager";
-import { ThreeSceneManager } from "@managers/ThreeSceneManager";
+import { ThreeSceneProxy } from "@proxies/ThreeSceneProxy";
 import { OnRenderParams } from "@proxies/RendererProxy";
 import { CustomEventsId } from '@constants/CustomEventsId';
 import { EventListenersId } from '@constants/EventListenersId';
@@ -26,7 +26,7 @@ export class Object3DBase {
     }
 
     this._instanceId = objectId;
-    ThreeSceneManager.AddObject(objectId, this._instance)
+    ThreeSceneProxy.AddObject(objectId, this._instance)
     
     this._isInstanced = true;
     this._onInstancedStateChange();
@@ -37,7 +37,7 @@ export class Object3DBase {
       throw new Error("Couldn't remove _Instance from scene as it is undefined");
     }
 
-    ThreeSceneManager.RemoveObject(this._instanceId);
+    ThreeSceneProxy.RemoveObject(this._instanceId);
     
     this._isInstanced = false;
     this._onInstancedStateChange();

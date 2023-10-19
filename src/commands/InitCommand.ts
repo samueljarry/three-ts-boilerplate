@@ -1,18 +1,26 @@
 import { EventsManager } from "@managers/EventsManager";
 import { ThreeAssetsManager } from "@managers/ThreeAssetsManager";
-import { ThreeSceneManager } from "@managers/ThreeSceneManager";
 import { Object3DBase } from "@views/three/bases/Object3DBase";
+import { InitViewsCommand } from "./InitViewsCommand";
+import { CamerasProxy } from "@proxies/CamerasProxy";
+import { RendererProxy } from "@proxies/RendererProxy";
 
 export class InitCommand {
   public static async Init() {
-    InitCommand.InitProxies();
+    await InitCommand.InitCommands();
+    await InitCommand.InitProxies();
+    await InitCommand.InitManagers();
+    await InitCommand.LoadAssets();
   }
 
-  public static async InitProxies() {
-    InitCommand.InitManagers();
+  public static async InitCommands(): Promise<void> {
+    InitViewsCommand.Init();
   }
 
-  public static async InitManagers() {
+  public static async InitProxies(): Promise<void> {
+  }
+
+  public static async InitManagers(): Promise<void> {
     ThreeAssetsManager.Init();
     EventsManager.Init();
     new Object3DBase();
@@ -20,8 +28,7 @@ export class InitCommand {
     InitCommand.LoadAssets();
   }
 
-  public static async LoadAssets() {
+  public static async LoadAssets(): Promise<void> {
     await ThreeAssetsManager.Load();
-    ThreeSceneManager.Init(document.querySelector('.webgl') as HTMLCanvasElement);
   }
 }

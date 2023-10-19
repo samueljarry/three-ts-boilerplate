@@ -1,4 +1,4 @@
-import { ThreeSceneManager } from '@managers/ThreeSceneManager';
+import { ThreeSceneProxy } from '@proxies/ThreeSceneProxy';
 import * as THREE from 'three';
 import { CamerasProxy } from './CamerasProxy';
 import { EventsManager } from '@managers/EventsManager';
@@ -20,7 +20,7 @@ export class RendererProxy {
 
   public static Init(): void {
     RendererProxy._Renderer = new THREE.WebGLRenderer({
-      canvas: ThreeSceneManager.Canvas,
+      canvas: ThreeSceneProxy.Canvas,
       alpha: true,
       antialias: true,
     });
@@ -50,7 +50,7 @@ export class RendererProxy {
       elapsed: RendererProxy._Elapsed,
     });
 
-    RendererProxy._Renderer.render(ThreeSceneManager.Scene, CamerasProxy.Camera)
+    RendererProxy._Renderer.render(ThreeSceneProxy.Scene, CamerasProxy.Camera)
     window.requestAnimationFrame(RendererProxy._Render.bind(this))
   }
 }
