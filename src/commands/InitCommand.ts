@@ -1,8 +1,10 @@
 import { ModelsId } from "@constants/ModelsId";
 import { PathId } from "@constants/PathId";
 import { TexturesId } from "@constants/TexturesId";
-import { EventsManager } from "@managers/EventsManager";
+import { DomEventsManager } from "@managers/DomEventsManager";
 import { ThreeAssetsManager } from "@managers/ThreeAssetsManager";
+import { Ticker } from "../utils/Ticker";
+import { ThreeCamerasManager } from "@managers/ThreeCamerasManager";
 
 export class InitCommand {
   public static async Init() {
@@ -10,6 +12,7 @@ export class InitCommand {
     await InitCommand.InitManagers();
     
     await InitCommand.LoadAssets();
+    await InitCommand.OnLoad();
   }
 
   public static async InitProxies(): Promise<void> {
@@ -17,7 +20,8 @@ export class InitCommand {
 
   public static async InitManagers(): Promise<void> {
     ThreeAssetsManager.Init();
-    EventsManager.Init();
+    DomEventsManager.Init();
+    ThreeCamerasManager.Init();
   
     InitCommand.LoadAssets();
   }
@@ -30,5 +34,9 @@ export class InitCommand {
     ThreeAssetsManager.AddModel(ModelsId.CHARMANDER, PathId.MODELS + 'charmander.glb')
 
     await ThreeAssetsManager.Load();
+  }
+
+  public static async OnLoad(): Promise<void> {
+    Ticker.Start();
   }
 }

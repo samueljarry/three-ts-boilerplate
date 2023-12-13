@@ -14,13 +14,15 @@
     "noEmit": true,
 
     "paths": {
+      "@bases/*": ["./src/bases/*"],
       "@proxies/*": ["./src/proxies/*"],      
       "@commands/*": ["./src/commands/*"],
-      "@views/*": ["./src/views/*"],
+      "@components/*": ["./src/components/*"],
       "@constants/*": ["./src/constants/*"],
       "@managers/*": ["./src/managers/*"],     
       "@styles/*": ["./src/styles/*"],      
       "@loaders/*": ["./src/loaders/*"],
+      "@utils/*": ["./src/utils/*"],
     },
 
     /* Linting */

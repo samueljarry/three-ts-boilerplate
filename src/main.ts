@@ -10,6 +10,11 @@ export class Main {
 
   public static Start() {
     MainThree.Init();
+    
+    const canvas = document.querySelector('.webgl') as HTMLCanvasElement;
+    
+    MainThree.SetCanvasContainer(canvas);
+    MainThree.Start();
   }
 }
 

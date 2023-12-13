@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { ThreeAssetsManager } from "@managers/ThreeAssetsManager";
-import { Object3DBase } from "./bases/Object3DBase";
+import { Object3DBase } from "../../bases/Object3DBase";
 import { ModelsId } from "@constants/ModelsId";
 import { OnRenderParams } from "@proxies/RendererProxy";
 
