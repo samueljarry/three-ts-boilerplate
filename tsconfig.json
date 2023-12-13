@@ -20,6 +20,7 @@
       "@constants/*": ["./src/constants/*"],
       "@managers/*": ["./src/managers/*"],     
       "@styles/*": ["./src/styles/*"],      
+      "@loaders/*": ["./src/loaders/*"],
     },
 
     /* Linting */

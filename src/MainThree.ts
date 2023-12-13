@@ -1,12 +1,21 @@
-import { CamerasProxy } from "@proxies/CamerasProxy";
-import { ThreeSceneProxy } from "@proxies/ThreeSceneProxy";
-import { RendererProxy } from "@proxies/RendererProxy";
-
+import { Scene, WebGLRenderer } from "three";
 
 export class MainThree {
+  private static _Scene: Scene;
+  private static _Renderer: WebGLRenderer;
+
   public static Init() {
-    ThreeSceneProxy.Init(document.querySelector('.webgl') as HTMLCanvasElement);
-    CamerasProxy.Init('perspective');
-    RendererProxy.Init();
+    this._CreateScene();
+  }
+
+  private static _CreateScene(): void {
+    this._Scene = new Scene();
+    this._Renderer = new WebGLRenderer({
+      alpha: true,
+      preserveDrawingBuffer: false,
+      antialias: false,
+    })
+
+    
   }
 }

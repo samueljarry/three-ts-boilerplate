@@ -10,6 +10,7 @@ export default defineConfig({
       '@constants': path.resolve(__dirname, './src/constants/'),
       '@managers': path.resolve(__dirname, './src/managers/'),
       '@styles': path.resolve(__dirname, './src/styles/'),
+      '@loaders': path.resolve(__dirname, './src/loaders/'),
     }
   }
 })
